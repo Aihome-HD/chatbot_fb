@@ -1,4 +1,6 @@
 import os
+
+VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")  # Lấy từ biến môi trường
 import requests
 from flask import Flask, request
 
@@ -12,9 +14,12 @@ VERIFY_TOKEN = "e9519302e14743eeee435fd03597d4"  # Token dùng để xác minh W
 def verify():
     """Xác minh Webhook với Facebook"""
     token_sent = request.args.get("hub.verify_token")
+    challenge = request.args.get("hub.challenge")
+
     if token_sent == VERIFY_TOKEN:
-        return request.args.get("hub.challenge")
+        return challenge  # Trả về challenge nếu token đúng
     return "Xác minh thất bại", 403
+
 
 @app.route("/", methods=["POST"])
 def webhook():
