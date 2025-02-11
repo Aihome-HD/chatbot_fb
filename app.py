@@ -12,9 +12,11 @@ VERIFY_TOKEN = "e95193020e147437eeee435fd03597d4"  # Token dùng để xác minh
 def verify():
     """Xác minh Webhook với Facebook"""
     token_sent = request.args.get("hub.verify_token")
-    if token_sent == VERIFY_TOKEN:
-        return request.args.get("hub.challenge")
+    challenge = request.args.get("hub.challenge")  # Lấy giá trị challenge
+    if token_sent == VERIFY_TOKEN and challenge:
+        return str(challenge)  # Trả về challenge dưới dạng chuỗi
     return "Xác minh thất bại", 403
+
 
 @app.route("/", methods=["POST"])
 def webhook():
